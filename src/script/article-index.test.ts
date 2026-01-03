@@ -4,7 +4,7 @@ import {
   buildArticleEntry,
   buildTagIndex,
   type ArticleIndexEntry,
-} from './generate-index'
+} from './article-index'
 
 describe('parseArticlePath', () => {
   it('parses valid article path', () => {
