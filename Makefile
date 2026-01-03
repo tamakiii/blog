@@ -1,4 +1,4 @@
-.PHONY: help build clean preview
+.PHONY: help build clean test preview
 
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
@@ -14,6 +14,9 @@ build: \
 
 clean: ## Clean build artifacts
 	rm -rf docs node_modules
+
+test:
+	npx --no vitest run
 
 preview: build ## Preview production build
 	npx vite preview
