@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useArticleIndex } from "../hooks/useArticleIndex";
+import { filterAndSortArticles } from "../lib/article-filter";
 import TagLink from "./TagLink";
 
 interface ArticleListProps {
@@ -33,24 +34,7 @@ export default function ArticleList({ showTags }: ArticleListProps) {
     );
   }
 
-  // Filter articles
-  let articles = index.articles;
-
-  if (locale) {
-    articles = articles.filter((a) => a.locale === locale);
-  }
-
-  if (tag) {
-    const articlePaths = index.tags[tag] || [];
-    articles = articles.filter((a) => articlePaths.includes(a.path));
-  }
-
-  // Sort by date descending
-  articles = [...articles].sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).getTime() -
-      new Date(a.frontmatter.date).getTime()
-  );
+  const articles = filterAndSortArticles(index, locale, tag);
 
   return (
     <div className="article-list">
