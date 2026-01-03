@@ -47,7 +47,7 @@ export function parseArticlePath(file: string): ParsedArticlePath | null {
  */
 export function buildArticleEntry(
   parsed: ParsedArticlePath,
-  data: Record<string, unknown>
+  data: ArticleFrontmatter | Record<string, unknown>
 ): ArticleIndexEntry {
   const { locale, year, date, slug } = parsed;
   const articlePath = `/${locale}/${year}/${date}/${slug}`;
