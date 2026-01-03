@@ -6,7 +6,7 @@ Personal blog repository deployed to GitHub Pages at blog.tamakiii.com.
 
 ## Structure
 
-- `article/` - Source content (HTML files)
+- `article/` - Source content (Markdown files)
 - `docs/` - Generated output (git-ignored, built by `make build`)
 - `terraform/` - AWS Route53 DNS configuration
 - `.github/workflows/deploy.yml` - GitHub Actions deployment workflow
