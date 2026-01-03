@@ -16,3 +16,7 @@ terraform {
 provider "aws" {
   region = "ap-northeast-1"
 }
+
+data "aws_route53_zone" "tamakiii_com" {
+  name = "tamakiii.com."
+}
