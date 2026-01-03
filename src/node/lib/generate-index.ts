@@ -1,12 +1,27 @@
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { glob } from "glob";
 import type {
   ArticleFrontmatter,
   ParsedArticlePath,
   ArticleIndexEntry,
   ArticleIndex,
-} from "../../shared/types/article";
+} from "@shared/article";
 
 // Re-export types for convenience
 export type { ArticleFrontmatter, ParsedArticlePath, ArticleIndexEntry, ArticleIndex };
+
+export interface GenerateIndexOptions {
+  articleDir: string;
+  outputDir: string;
+}
+
+export interface GenerateIndexResult {
+  index: ArticleIndex;
+  articlesCount: number;
+  tags: string[];
+}
 
 /**
  * Parse article file path into components.
@@ -69,4 +84,61 @@ export function buildTagIndex(
   }
 
   return tags;
+}
+
+/**
+ * Generate article index and individual frontmatter JSON files.
+ */
+export async function generateIndex(
+  options: GenerateIndexOptions
+): Promise<GenerateIndexResult> {
+  const { articleDir, outputDir } = options;
+  const articles: ArticleIndexEntry[] = [];
+
+  const files = await glob("**/*.md", { cwd: articleDir });
+
+  for (const file of files) {
+    const parsed = parseArticlePath(file);
+    if (!parsed) {
+      console.warn(`Skipping ${file}: unexpected path structure`);
+      continue;
+    }
+
+    const filePath = path.join(articleDir, file);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data } = matter(raw);
+
+    const entry = buildArticleEntry(parsed, data);
+    articles.push(entry);
+
+    // Generate individual JSON file for frontmatter
+    const jsonPath = file.replace(/\.md$/, ".json");
+    const jsonOutputPath = path.join(outputDir, jsonPath);
+    const jsonData: ArticleFrontmatter = {
+      title: (data.title as string) || "",
+      date: (data.date as string) || "",
+      tags: data.tags as string[] | undefined,
+      description: data.description as string | undefined,
+    };
+
+    fs.mkdirSync(path.dirname(jsonOutputPath), { recursive: true });
+    fs.writeFileSync(jsonOutputPath, JSON.stringify(jsonData, null, 2));
+  }
+
+  const tags = buildTagIndex(articles);
+  const index: ArticleIndex = { articles, tags };
+
+  return {
+    index,
+    articlesCount: articles.length,
+    tags: Object.keys(tags),
+  };
+}
+
+/**
+ * Write the article index to a JSON file.
+ */
+export function writeIndex(index: ArticleIndex, outputPath: string): void {
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, JSON.stringify(index, null, 2));
 }
