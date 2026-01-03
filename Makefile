@@ -27,10 +27,10 @@ docs: node_modules
 	npx vite build
 
 docs/en_US: article/en_US | docs
-	cp -r $< $(dir $@)
+	cp -r $< docs/
 
 docs/ja_JP: article/ja_JP | docs
-	cp -r $< $(dir $@)
+	cp -r $< docs/
 
 docs/index.json: docs/en_US docs/ja_JP
 	npx tsx script/generate-index.ts
