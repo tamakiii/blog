@@ -1,8 +1,86 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { glob } from "glob";
+
+function generateArticleIndex() {
+  const articleDir = path.join(process.cwd(), "article");
+  const files = glob.sync("**/*.md", { cwd: articleDir });
+
+  const articles: unknown[] = [];
+  const tags: Record<string, string[]> = {};
+
+  for (const file of files) {
+    const filePath = path.join(articleDir, file);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data } = matter(raw);
+
+    const parts = file.split("/");
+    if (parts.length !== 4) continue;
+
+    const [locale, year, date, filename] = parts;
+    const slug = filename.replace(".md", "");
+    const articlePath = `/${locale}/${year}/${date}/${slug}`;
+
+    const entry = {
+      path: articlePath,
+      locale,
+      year,
+      date,
+      slug,
+      frontmatter: {
+        title: data.title || slug,
+        date: data.date || "",
+        tags: data.tags || [],
+        description: data.description || "",
+      },
+    };
+
+    articles.push(entry);
+
+    for (const tag of entry.frontmatter.tags) {
+      if (!tags[tag]) tags[tag] = [];
+      tags[tag].push(articlePath);
+    }
+  }
+
+  return { articles, tags };
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: "serve-articles",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          // Serve article index.json dynamically in dev mode
+          if (req.url === "/articles/index.json") {
+            const index = generateArticleIndex();
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify(index, null, 2));
+            return;
+          }
+
+          // Serve /articles/* from ./article/* in dev mode
+          if (req.url?.startsWith("/articles/")) {
+            const articlePath = req.url.replace("/articles/", "");
+            const filePath = path.join(process.cwd(), "article", articlePath);
+
+            if (fs.existsSync(filePath)) {
+              const content = fs.readFileSync(filePath, "utf-8");
+              res.setHeader("Content-Type", "text/plain; charset=utf-8");
+              res.end(content);
+              return;
+            }
+          }
+          next();
+        });
+      },
+    },
+  ],
   base: "/",
   build: {
     outDir: "docs",
