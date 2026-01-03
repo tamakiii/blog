@@ -25,7 +25,7 @@ interface ArticleIndex {
 }
 
 const ARTICLE_DIR = "./article";
-const OUTPUT_DIR = "./docs/articles";
+const OUTPUT_DIR = "./docs";
 const OUTPUT_FILE = path.join(OUTPUT_DIR, "index.json");
 
 async function generateIndex(): Promise<ArticleIndex> {

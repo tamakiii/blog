@@ -47,7 +47,7 @@ async function generatePages() {
 }
 
 async function generateTagPages() {
-  const indexPath = path.join(DOCS_DIR, "articles", "index.json");
+  const indexPath = path.join(DOCS_DIR, "index.json");
 
   if (!fs.existsSync(indexPath)) {
     console.warn("Article index not found, skipping tag pages");

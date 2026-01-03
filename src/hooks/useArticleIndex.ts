@@ -7,7 +7,7 @@ export function useArticleIndex() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    fetch("/articles/index.json")
+    fetch("/index.json")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to load article index");

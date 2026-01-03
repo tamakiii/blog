@@ -6,8 +6,7 @@ help:
 build: \
 	node_modules \
 	docs \
-	docs/articles \
-	docs/articles/index.json \
+	docs/index.json \
 	docs/CNAME
 
 clean: ## Clean build artifacts
@@ -24,11 +23,8 @@ docs: node_modules
 	npx tsc
 	npx vite build
 
-docs/articles: | docs
-	mkdir -p $@
-	cp -r article/* $@
-
-docs/articles/index.json: docs/articles
+docs/index.json: docs
+	cp -r article/* docs/
 	npx tsx script/generate-index.ts
 	npx tsx script/generate-pages.ts
 

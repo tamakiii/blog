@@ -13,9 +13,9 @@ export function useArticle(articlePath: string) {
       return;
     }
 
-    // Convert path like /en_US/2026/01-03/hello to /articles/en_US/2026/01-03/hello.md
+    // Convert path like /en_US/2026/01-03/hello to /en_US/2026/01-03/hello.md
     const cleanPath = articlePath.replace(/^\//, "").replace(/\/$/, "");
-    const mdPath = `/articles/${cleanPath}.md`;
+    const mdPath = `/${cleanPath}.md`;
 
     setLoading(true);
     setError(null);

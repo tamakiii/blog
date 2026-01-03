@@ -73,16 +73,16 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
           // Serve article index.json dynamically in dev mode
-          if (req.url === "/articles/index.json") {
+          if (req.url === "/index.json") {
             const index = generateArticleIndex();
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify(index, null, 2));
             return;
           }
 
-          // Serve /articles/* from ./article/* in dev mode
-          if (req.url?.startsWith("/articles/")) {
-            const articlePath = req.url.replace("/articles/", "");
+          // Serve markdown files from ./article/* in dev mode
+          if (req.url?.endsWith(".md")) {
+            const articlePath = req.url.replace(/^\//, "");
             const articleRoot = path.join(process.cwd(), "article");
             const resolvedPath = path.resolve(articleRoot, articlePath);
 
