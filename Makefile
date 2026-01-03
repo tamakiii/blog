@@ -24,7 +24,8 @@ node_modules: package.json package-lock.json
 	touch $@
 
 docs: node_modules
-	npx tsc && npx vite build
+	npx tsc
+	npx vite build
 
 docs/articles: | docs
 	mkdir -p $@
