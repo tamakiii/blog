@@ -1,8 +1,21 @@
-.PHONY: docs clean
+.PHONY: help build clean docs
 
-docs:
-	mkdir -p docs
-	cp -r article/* docs/
+help:
+	@cat $(firstword $(MAKEFILE_LIST))
+
+build: \
+	docs \
+	docs/CNAME \
+	docs/index.html
 
 clean:
 	rm -rf docs
+
+docs:
+	mkdir -p docs
+
+docs/index.html:
+	cp -r article/* docs/
+
+docs/CNAME: | CNAME
+	cp $| $@
