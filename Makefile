@@ -36,10 +36,10 @@ docs/ja_JP: article/ja_JP | docs
 	cp -r $< $|
 
 docs/index.json: docs/en_US docs/ja_JP
-	npx tsx script/generate-index.ts
+	npx tsx src/node/cli/generate-index.ts
 
 docs/tags: docs/index.json
-	npx tsx script/generate-pages.ts
+	npx tsx src/node/cli/generate-pages.ts
 
 docs/CNAME: CNAME | docs
 	cp $< $@

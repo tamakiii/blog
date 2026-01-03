@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Article, ArticleFrontmatter } from "../../shared/types/article";
+import type { Article, ArticleFrontmatter } from "@shared/article";
 
 function toFilePath(articlePath: string, extension: string): string {
   const cleanPath = articlePath.replace(/^\//, "").replace(/\/$/, "");

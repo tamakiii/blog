@@ -8,7 +8,7 @@ import {
   buildArticleEntry,
   buildTagIndex,
   type ArticleIndex,
-} from "../script/generate-index";
+} from "../lib/generate-index";
 
 function generateArticleIndex(): ArticleIndex {
   const articleDir = path.join(process.cwd(), "article");

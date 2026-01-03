@@ -1,4 +1,4 @@
-import type { ArticleIndexEntry, ArticleIndex } from "../../shared/types/article";
+import type { ArticleIndexEntry, ArticleIndex } from "@shared/article";
 
 /**
  * Filter articles by locale.

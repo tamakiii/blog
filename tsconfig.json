@@ -14,7 +14,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["src/shared/*"],
+      "@browser/*": ["src/browser/*"],
+      "@node/*": ["src/node/*"]
+    }
   },
-  "include": ["src", "script"]
+  "include": ["src"]
 }

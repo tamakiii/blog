@@ -1,6 +1,6 @@
 import path from "path";
 import matter from "gray-matter";
-import type { ArticleFrontmatter } from "../../shared/types/article";
+import type { ArticleFrontmatter } from "@shared/article";
 
 /**
  * Check if a resolved path is within the allowed root directory.
