@@ -8,7 +8,7 @@ import {
   buildTagIndex,
   type ArticleIndex,
   type ArticleIndexEntry,
-} from "../src/node/script/generate-index";
+} from "../lib/generate-index";
 
 const ARTICLE_DIR = "./article";
 const OUTPUT_DIR = "./docs";
