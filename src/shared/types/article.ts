@@ -10,6 +10,13 @@ export interface Article {
   content: string;
 }
 
+export interface ParsedArticlePath {
+  locale: string;
+  year: string;
+  date: string;
+  slug: string;
+}
+
 export interface ArticleIndexEntry {
   path: string;
   locale: string;

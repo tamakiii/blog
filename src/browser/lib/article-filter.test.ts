@@ -5,7 +5,7 @@ import {
   sortByDateDesc,
   filterAndSortArticles,
 } from './article-filter'
-import type { ArticleIndexEntry, ArticleIndex } from '../types/article'
+import type { ArticleIndexEntry, ArticleIndex } from '../../shared/types/article'
 
 const createArticle = (
   overrides: Partial<ArticleIndexEntry> & { path: string }

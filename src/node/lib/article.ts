@@ -1,6 +1,6 @@
 import path from "path";
 import matter from "gray-matter";
-import type { ArticleFrontmatter } from "../script/generate-index";
+import type { ArticleFrontmatter } from "../../shared/types/article";
 
 /**
  * Check if a resolved path is within the allowed root directory.

@@ -1,30 +1,12 @@
-export interface ArticleFrontmatter {
-  title: string;
-  date: string;
-  tags?: string[];
-  description?: string;
-}
+import type {
+  ArticleFrontmatter,
+  ParsedArticlePath,
+  ArticleIndexEntry,
+  ArticleIndex,
+} from "../../shared/types/article";
 
-export interface ParsedArticlePath {
-  locale: string;
-  year: string;
-  date: string;
-  slug: string;
-}
-
-export interface ArticleIndexEntry {
-  path: string;
-  locale: string;
-  year: string;
-  date: string;
-  slug: string;
-  frontmatter: ArticleFrontmatter;
-}
-
-export interface ArticleIndex {
-  articles: ArticleIndexEntry[];
-  tags: Record<string, string[]>;
-}
+// Re-export types for convenience
+export type { ArticleFrontmatter, ParsedArticlePath, ArticleIndexEntry, ArticleIndex };
 
 /**
  * Parse article file path into components.
