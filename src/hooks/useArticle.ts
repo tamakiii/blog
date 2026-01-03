@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
-import { parseFrontmatter, toMarkdownPath } from "../lib/frontmatter";
-import type { Article } from "../types/article";
+import type { Article, ArticleFrontmatter } from "../types/article";
+
+function toFilePath(articlePath: string, extension: string): string {
+  const cleanPath = articlePath.replace(/^\//, "").replace(/\/$/, "");
+  return `/${cleanPath}.${extension}`;
+}
+
+function stripFrontmatter(content: string): string {
+  const match = content.match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/);
+  return match ? match[1] : content;
+}
 
 export function useArticle(articlePath: string) {
   const [article, setArticle] = useState<Article | null>(null);
@@ -13,20 +22,24 @@ export function useArticle(articlePath: string) {
       return;
     }
 
-    const mdPath = toMarkdownPath(articlePath);
+    const jsonPath = toFilePath(articlePath, "json");
+    const mdPath = toFilePath(articlePath, "md");
 
     setLoading(true);
     setError(null);
 
-    fetch(mdPath)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Article not found: ${mdPath}`);
-        }
+    Promise.all([
+      fetch(jsonPath).then((res) => {
+        if (!res.ok) throw new Error(`Frontmatter not found: ${jsonPath}`);
+        return res.json() as Promise<ArticleFrontmatter>;
+      }),
+      fetch(mdPath).then((res) => {
+        if (!res.ok) throw new Error(`Article not found: ${mdPath}`);
         return res.text();
-      })
-      .then((raw) => {
-        const { frontmatter, content } = parseFrontmatter(raw);
+      }),
+    ])
+      .then(([frontmatter, rawContent]) => {
+        const content = stripFrontmatter(rawContent);
         setArticle({ frontmatter, content });
       })
       .catch((err) => {

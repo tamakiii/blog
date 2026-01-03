@@ -14,6 +14,13 @@ const ARTICLE_DIR = "./article";
 const OUTPUT_DIR = "./docs";
 const OUTPUT_FILE = path.join(OUTPUT_DIR, "index.json");
 
+interface ArticleFrontmatterJson {
+  title: string;
+  date: string;
+  tags?: string[];
+  description?: string;
+}
+
 async function generateIndex(): Promise<ArticleIndex> {
   const articles: ArticleIndexEntry[] = [];
 
@@ -33,6 +40,20 @@ async function generateIndex(): Promise<ArticleIndex> {
 
     const entry = buildArticleEntry(parsed, data);
     articles.push(entry);
+
+    // Generate individual JSON file for frontmatter
+    const jsonPath = file.replace(/\.md$/, ".json");
+    const jsonOutputPath = path.join(OUTPUT_DIR, jsonPath);
+    const jsonData: ArticleFrontmatterJson = {
+      title: data.title || "",
+      date: data.date || "",
+      tags: data.tags,
+      description: data.description,
+    };
+
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(jsonOutputPath), { recursive: true });
+    fs.writeFileSync(jsonOutputPath, JSON.stringify(jsonData, null, 2));
   }
 
   const tags = buildTagIndex(articles);
@@ -52,6 +73,7 @@ async function main() {
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(index, null, 2));
 
   console.log(`Generated index with ${index.articles.length} articles`);
+  console.log(`Generated ${index.articles.length} frontmatter JSON files`);
   console.log(`Tags: ${Object.keys(index.tags).join(", ") || "(none)"}`);
   console.log(`Output: ${OUTPUT_FILE}`);
 }

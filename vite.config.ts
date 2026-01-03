@@ -80,6 +80,35 @@ export default defineConfig({
             return;
           }
 
+          // Serve frontmatter JSON files dynamically in dev mode
+          if (req.url?.endsWith(".json") && req.url !== "/index.json") {
+            const jsonPath = req.url.replace(/^\//, "");
+            const mdPath = jsonPath.replace(/\.json$/, ".md");
+            const articleRoot = path.join(process.cwd(), "article");
+            const resolvedPath = path.resolve(articleRoot, mdPath);
+
+            // Prevent path traversal attacks
+            if (!resolvedPath.startsWith(articleRoot + path.sep)) {
+              res.statusCode = 400;
+              res.end("Invalid article path");
+              return;
+            }
+
+            if (fs.existsSync(resolvedPath)) {
+              const raw = fs.readFileSync(resolvedPath, "utf-8");
+              const { data } = matter(raw);
+              const frontmatterJson = {
+                title: data.title || "",
+                date: data.date || "",
+                tags: data.tags,
+                description: data.description,
+              };
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify(frontmatterJson, null, 2));
+              return;
+            }
+          }
+
           // Serve markdown files from ./article/* in dev mode
           if (req.url?.endsWith(".md")) {
             const articlePath = req.url.replace(/^\//, "");
