@@ -1,7 +1,5 @@
 .PHONY: help build clean
 
--include dev.mk
-
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
 
