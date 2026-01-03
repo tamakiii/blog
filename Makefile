@@ -1,4 +1,4 @@
-.PHONY: help build clean dev
+.PHONY: help build clean dev preview
 
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
@@ -14,22 +14,25 @@ clean: ## Clean build artifacts
 	rm -rf docs node_modules
 
 dev: node_modules ## Start development server
-	npm run dev
+	npx vite
+
+preview: build ## Preview production build
+	npx vite preview
 
 node_modules: package.json package-lock.json
 	npm ci
 	touch $@
 
 docs: node_modules
-	npm run build
+	npx tsc && npx vite build
 
 docs/articles: | docs
 	mkdir -p $@
 	cp -r article/* $@
 
 docs/articles/index.json: docs/articles
-	npm run generate:index
-	npm run generate:pages
+	npx tsx scripts/generate-index.ts
+	npx tsx scripts/generate-pages.ts
 
 docs/CNAME: CNAME | docs
 	cp $< $@
