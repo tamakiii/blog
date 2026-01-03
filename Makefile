@@ -26,11 +26,11 @@ docs: node_modules
 	npx tsc
 	npx vite build
 
-docs/en_US: | docs
-	cp -r article/en_US docs/
+docs/en_US: article/en_US | docs
+	cp -r $< $(dir $@)
 
-docs/ja_JP: | docs
-	cp -r article/ja_JP docs/
+docs/ja_JP: article/ja_JP | docs
+	cp -r $< $(dir $@)
 
 docs/index.json: docs/en_US docs/ja_JP
 	npx tsx script/generate-index.ts
