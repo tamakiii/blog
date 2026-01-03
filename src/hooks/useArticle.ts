@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { parseFrontmatter } from "../utils/frontmatter";
+import { parseFrontmatter } from "../lib/frontmatter";
 import type { Article } from "../types/article";
 
 export function useArticle(articlePath: string) {
