@@ -29,8 +29,8 @@ docs/articles: | docs
 	cp -r article/* $@
 
 docs/articles/index.json: docs/articles
-	npx tsx scripts/generate-index.ts
-	npx tsx scripts/generate-pages.ts
+	npx tsx script/generate-index.ts
+	npx tsx script/generate-pages.ts
 
 docs/CNAME: CNAME | docs
 	cp $< $@
