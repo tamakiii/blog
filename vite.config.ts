@@ -5,11 +5,27 @@ import path from "path";
 import matter from "gray-matter";
 import { glob } from "glob";
 
+interface ArticleFrontmatter {
+  title: string;
+  date: string;
+  tags: string[];
+  description: string;
+}
+
+interface ArticleEntry {
+  path: string;
+  locale: string;
+  year: string;
+  date: string;
+  slug: string;
+  frontmatter: ArticleFrontmatter;
+}
+
 function generateArticleIndex() {
   const articleDir = path.join(process.cwd(), "article");
   const files = glob.sync("**/*.md", { cwd: articleDir });
 
-  const articles: unknown[] = [];
+  const articles: ArticleEntry[] = [];
   const tags: Record<string, string[]> = {};
 
   for (const file of files) {
@@ -67,10 +83,18 @@ export default defineConfig({
           // Serve /articles/* from ./article/* in dev mode
           if (req.url?.startsWith("/articles/")) {
             const articlePath = req.url.replace("/articles/", "");
-            const filePath = path.join(process.cwd(), "article", articlePath);
+            const articleRoot = path.join(process.cwd(), "article");
+            const resolvedPath = path.resolve(articleRoot, articlePath);
 
-            if (fs.existsSync(filePath)) {
-              const content = fs.readFileSync(filePath, "utf-8");
+            // Prevent path traversal attacks
+            if (!resolvedPath.startsWith(articleRoot + path.sep)) {
+              res.statusCode = 400;
+              res.end("Invalid article path");
+              return;
+            }
+
+            if (fs.existsSync(resolvedPath)) {
+              const content = fs.readFileSync(resolvedPath, "utf-8");
               res.setHeader("Content-Type", "text/plain; charset=utf-8");
               res.end(content);
               return;

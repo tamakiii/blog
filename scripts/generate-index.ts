@@ -54,7 +54,7 @@ async function generateIndex(): Promise<ArticleIndex> {
 
     const frontmatter: ArticleFrontmatter = {
       title: data.title || slug,
-      date: data.date || `${year}-${date.replace("-", "-")}`,
+      date: data.date || `${year}-${date}`,
       tags: data.tags || [],
       description: data.description || "",
     };
