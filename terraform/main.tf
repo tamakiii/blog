@@ -20,3 +20,11 @@ provider "aws" {
 data "aws_route53_zone" "tamakiii_com" {
   name = "tamakiii.com."
 }
+
+resource "aws_route53_record" "blog" {
+  zone_id = data.aws_route53_zone.tamakiii_com.zone_id
+  name    = "blog.tamakiii.com"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["tamakiii.github.io"]
+}
