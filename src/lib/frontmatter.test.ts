@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseFrontmatter } from './frontmatter'
+import { parseFrontmatter, toMarkdownPath } from './frontmatter'
 
 describe('parseFrontmatter', () => {
   it('parses valid frontmatter with all fields', () => {
@@ -119,5 +119,23 @@ Content`
 
     expect(result.frontmatter.title).toBe('Single Quoted')
     expect(result.frontmatter.date).toBe('Double Quoted')
+  })
+})
+
+describe('toMarkdownPath', () => {
+  it('converts path with leading slash', () => {
+    expect(toMarkdownPath('/en_US/2026/01-03/hello')).toBe('/en_US/2026/01-03/hello.md')
+  })
+
+  it('converts path with trailing slash', () => {
+    expect(toMarkdownPath('en_US/2026/01-03/hello/')).toBe('/en_US/2026/01-03/hello.md')
+  })
+
+  it('converts path with both leading and trailing slashes', () => {
+    expect(toMarkdownPath('/en_US/2026/01-03/hello/')).toBe('/en_US/2026/01-03/hello.md')
+  })
+
+  it('converts path without slashes', () => {
+    expect(toMarkdownPath('en_US/2026/01-03/hello')).toBe('/en_US/2026/01-03/hello.md')
   })
 })

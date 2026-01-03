@@ -78,3 +78,12 @@ export function parseFrontmatter(content: string): {
     content: markdownContent,
   };
 }
+
+/**
+ * Convert article path to markdown file path.
+ * e.g., "/en_US/2026/01-03/hello" → "/en_US/2026/01-03/hello.md"
+ */
+export function toMarkdownPath(articlePath: string): string {
+  const cleanPath = articlePath.replace(/^\//, "").replace(/\/$/, "");
+  return `/${cleanPath}.md`;
+}

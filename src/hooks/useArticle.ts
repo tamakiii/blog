@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { parseFrontmatter } from "../lib/frontmatter";
+import { parseFrontmatter, toMarkdownPath } from "../lib/frontmatter";
 import type { Article } from "../types/article";
 
 export function useArticle(articlePath: string) {
@@ -13,9 +13,7 @@ export function useArticle(articlePath: string) {
       return;
     }
 
-    // Convert path like /en_US/2026/01-03/hello to /en_US/2026/01-03/hello.md
-    const cleanPath = articlePath.replace(/^\//, "").replace(/\/$/, "");
-    const mdPath = `/${cleanPath}.md`;
+    const mdPath = toMarkdownPath(articlePath);
 
     setLoading(true);
     setError(null);
