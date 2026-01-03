@@ -1,21 +1,21 @@
-.PHONY: help build clean docs
+.PHONY: help build clean dev
 
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
 
-build: \
-	docs \
-	docs/CNAME \
-	docs/index.html
+build: node_modules ## Build the site
+	npm run build
+	mkdir -p docs/articles
+	cp -r article/* docs/articles/
+	npm run generate:index
+	npm run generate:pages
 
-clean:
-	rm -rf docs
+clean: ## Clean build artifacts
+	rm -rf docs node_modules
 
-docs:
-	mkdir -p docs
+dev: node_modules ## Start development server
+	npm run dev
 
-docs/index.html:
-	cp -r article/* docs/
-
-docs/CNAME: | CNAME
-	cp $| $@
+node_modules: package.json package-lock.json
+	npm ci
+	touch node_modules
