@@ -6,7 +6,10 @@ help:
 build: \
 	node_modules \
 	docs \
+	docs/en_US \
+	docs/ja_JP \
 	docs/index.json \
+	docs/tags \
 	docs/CNAME
 
 clean: ## Clean build artifacts
@@ -23,9 +26,16 @@ docs: node_modules
 	npx tsc
 	npx vite build
 
-docs/index.json: docs
-	cp -r article/* docs/
+docs/en_US: | docs
+	cp -r article/en_US docs/
+
+docs/ja_JP: | docs
+	cp -r article/ja_JP docs/
+
+docs/index.json: docs/en_US docs/ja_JP
 	npx tsx script/generate-index.ts
+
+docs/tags: docs/index.json
 	npx tsx script/generate-pages.ts
 
 docs/CNAME: CNAME | docs
