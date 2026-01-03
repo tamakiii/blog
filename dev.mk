@@ -1,7 +1,10 @@
-.PHONY: dev preview
+.PHONY: help dev
+
+help:
+	@cat $(firstword $(MAKEFILE_LIST))
 
 dev: node_modules ## Start development server
 	npx vite
 
-preview: build ## Preview production build
-	npx vite preview
+node_modules:
+	$(MAKE) node_modules

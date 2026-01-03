@@ -1,4 +1,4 @@
-.PHONY: help build clean
+.PHONY: help build clean preview
 
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
@@ -12,6 +12,9 @@ build: \
 
 clean: ## Clean build artifacts
 	rm -rf docs node_modules
+
+preview: build ## Preview production build
+	npx vite preview
 
 node_modules: package.json package-lock.json
 	npm ci
